@@ -6,6 +6,8 @@ pkgs.mkShell {
   ];
 
   buildInputs = with pkgs; [
+    proxychains-ng
+
     # --- Backend (Rust) ---
     rustc
     cargo
