@@ -1,7 +1,7 @@
 # ==========================================
-# 1. ЭТАП СБОРКИ (BUILDER)
+# 1. ЭТАП СБОРКИ (BUILDER) - берем актуальный Rust 1.x
 # ==========================================
-FROM rust:1.82-bookworm AS builder
+FROM rust:1-bookworm AS builder
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Копируем манифесты (Cargo.lock* со звездочкой, чтобы не падало, если локфайла нет)
+# Копируем манифесты
 COPY Cargo.toml Cargo.lock* ./
 
 # Кэшируем зависимости: собираем фиктивный проект
@@ -23,7 +23,7 @@ RUN rm -rf src
 # Копируем реальные исходники
 COPY src ./src
 
-# Собираем реальный бинарник и АВТОМАТИЧЕСКИ копируем его как /app/server
+# Собираем реальный бинарник и копируем его как /app/server
 RUN touch src/main.rs && cargo build --release && \
     BIN_NAME=$(awk -F '"' '/^name =/ {print $2; exit}' Cargo.toml) && \
     cp target/release/${BIN_NAME} /app/server
