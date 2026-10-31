@@ -71,11 +71,17 @@ export interface HeroData {
   ambient: HeroAmbient
 }
 
+export interface FooterData {
+  certified: string
+  certifiedSub: string
+}
+
 export interface TranslationPayload {
   data?: ProfileData
   links?: LinksData
   header?: HeaderData
   media?: MediaData
   hero?: HeroData
+  footer?: FooterData
   [key: string]: any
 }

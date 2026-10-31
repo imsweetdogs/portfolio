@@ -3,6 +3,7 @@ import Header from '~/components/common/header/Header.vue'
 import ClickBurst from '~/components/common/effects/ClickBurst.vue'
 import CursorParticles from '~/components/common/effects/CursorParticles.vue'
 import CanvasSection from '~/components/common/CanvasSection.vue'
+import Footer from '~/components/common/Footer.vue'
 
 import { useI18n } from '~/composables/useI18n'
 import { useTexture } from '~/composables/useTexture'
@@ -62,6 +63,13 @@ const handleOpenTicket = () => {
       @toggle-texture="toggleTexture"
       @open-ticket="handleOpenTicket"
     />
+    
+    <CanvasSection pattern="none" class="z-20">
+      <Footer 
+        :links="translations.links" 
+        :i18n="translations.footer" 
+      />
+    </CanvasSection>
 
   </div>
 </template>

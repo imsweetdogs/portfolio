@@ -1,4 +1,3 @@
-// backend/src/db/schema/translations.rs
 use sqlx::PgPool;
 
 pub async fn init(pool: &PgPool) -> Result<(), sqlx::Error> {
@@ -70,7 +69,7 @@ pub async fn init(pool: &PgPool) -> Result<(), sqlx::Error> {
                 "https://br-bold-forest-b953969w.storage.c-7.eu-central-1.aws.neon.tech/portfolio/stickers/ie-hBfC-.webm",
                 "https://br-bold-forest-b953969w.storage.c-7.eu-central-1.aws.neon.tech/portfolio/stickers/pueQB29u.webm"
             ]
-        }'::jsonb),
+        }'::jsonb)
         ON CONFLICT (locale_code, namespace) DO NOTHING;
         "#
     )
