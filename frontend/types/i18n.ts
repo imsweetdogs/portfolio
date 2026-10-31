@@ -66,7 +66,6 @@ export interface HeroData {
   roleSuffix: string
   description: string
   tgBanner: string
-  stickerTitle: string
   easterEggText: string
   buttons: HeroButtons
   ambient: HeroAmbient
