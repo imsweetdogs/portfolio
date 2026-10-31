@@ -118,6 +118,64 @@ export interface SkillsTranslations {
   groups: SkillGroup[]
 }
 
+export interface AboutSpotifyLabels {
+  title: string
+  idle: string
+  idleSub: string
+}
+
+export interface AboutCodingLabels {
+  title: string
+  idle: string
+  idleSub: string
+  lastActivity: string
+}
+
+export interface AboutDiscordLabels {
+  dnd: string
+  online: string
+  idle: string
+  offline: string
+}
+
+export interface AboutSteamLabels {
+  title: string
+  online: string
+  offline: string
+  inGame: string
+  notInGame: string
+  level: string
+  topGames: string
+  achievements: string
+}
+
+export interface AboutSystemLabels {
+  title: string
+  os: string
+  wm: string
+  uptime: string
+  packages: string
+}
+
+export interface AboutGithubLabels {
+  title: string
+  commits: string
+  streak: string
+  sub: string
+}
+
+export interface AboutTranslations {
+  title: string
+  titleAccent: string
+  description: string
+  spotify: AboutSpotifyLabels
+  coding: AboutCodingLabels
+  discord: AboutDiscordLabels
+  steam: AboutSteamLabels
+  system: AboutSystemLabels
+  github: AboutGithubLabels
+}
+
 export interface TranslationPayload {
   data?: ProfileData
   links?: LinksData
@@ -126,6 +184,7 @@ export interface TranslationPayload {
   hero?: HeroData
   projects?: ProjectsTranslations
   skills?: SkillsTranslations
+  about?: AboutTranslations
   footer?: FooterData
   [key: string]: any
 }

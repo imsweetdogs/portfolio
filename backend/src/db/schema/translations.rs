@@ -232,6 +232,62 @@ pub async fn init(pool: &PgPool) -> Result<(), sqlx::Error> {
         r#"
         INSERT INTO translations (locale_code, namespace, payload)
         VALUES 
+        ('ru', 'about', '{
+            "title": "Немного обо",
+            "titleAccent": "мне",
+            "description": "Я могу описать себя как жизнерадостного и оптимистичного человека с кучей идей и планов в разных направлениях. Сейчас я всё ещё учусь в школе и постоянно стараюсь развиваться. Моя главная цель заключается в том чтобы сделать веб лучше и красивее. Помимо программирования, я экспериментирую с рисованием. 🐻",
+            "spotify": {
+                "title": "Сейчас слушаю",
+                "idle": "Сейчас ничего не играет",
+                "idleSub": "Тут мог быть классный исполнитель"
+            },
+            "coding": {
+                "title": "Сейчас работаю",
+                "idle": "Не активен",
+                "idleSub": "Отдыхает от кода",
+                "lastActivity": "Последняя активность"
+            },
+            "discord": {
+                "dnd": "Не беспокоить",
+                "online": "В сети",
+                "idle": "Не активен",
+                "offline": "Не в сети"
+            },
+            "steam": {
+                "title": "Steam",
+                "online": "В сети",
+                "offline": "Не в сети",
+                "inGame": "В игре",
+                "notInGame": "Не в игре",
+                "level": "Уровень профиля",
+                "topGames": "Любимые игры",
+                "achievements": "достижений"
+            },
+            "system": {
+                "title": "Окружение",
+                "os": "NixOS (unstable)",
+                "wm": "Hyprland / Wayland",
+                "uptime": "Uptime",
+                "packages": "пакетов"
+            },
+            "github": {
+                "title": "GitHub Activity",
+                "commits": "коммитов",
+                "streak": "дней подряд",
+                "sub": "Публичный вклад за год"
+            }
+        }'::jsonb)
+        ON CONFLICT (locale_code, namespace) 
+        DO UPDATE SET payload = EXCLUDED.payload;
+        "#
+    )
+    .execute(pool)
+    .await?;
+
+    sqlx::query(
+        r#"
+        INSERT INTO translations (locale_code, namespace, payload)
+        VALUES 
         ('ru', 'footer', '{
             "certified": "F07 certified",
             "certifiedSub": "(сертифицировано диагнозом F07)."

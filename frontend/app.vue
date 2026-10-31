@@ -9,6 +9,7 @@ import CanvasSection from '~/components/common/CanvasSection.vue'
 import HeroSection from '~/components/sections/hero/HeroSection.vue'
 import ProjectsSection from '~/components/sections/projects/ProjectsSection.vue'
 import SkillsSection from '~/components/sections/skills/SkillsSection.vue'
+import AboutSection from '~/components/sections/about/AboutSection.vue'
 
 import { useI18n } from '~/composables/useI18n'
 import { useTexture } from '~/composables/useTexture'
@@ -104,6 +105,16 @@ const handleOpenTicket = () => {
       <SkillsSection
         v-if="translations.skills"
         :i18n="translations.skills"
+      />
+
+      <AboutSection
+        v-if="translations.about"
+        :i18n="translations.about"
+        :avatar-url="translations.media?.avatarUrl"
+        :email="translations.links?.email"
+        :tg-link="translations.links?.tg"
+        :discord-link="translations.links?.discord"
+        :github-link="translations.links?.github"
       />
     </main>
 
