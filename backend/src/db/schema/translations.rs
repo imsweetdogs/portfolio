@@ -70,7 +70,7 @@ pub async fn init(pool: &PgPool) -> Result<(), sqlx::Error> {
                 "https://br-bold-forest-b953969w.storage.c-7.eu-central-1.aws.neon.tech/portfolio/stickers/ie-hBfC-.webm",
                 "https://br-bold-forest-b953969w.storage.c-7.eu-central-1.aws.neon.tech/portfolio/stickers/pueQB29u.webm"
             ]
-        }'::jsonb)
+        }'::jsonb),
         ON CONFLICT (locale_code, namespace) DO NOTHING;
         "#
     )
@@ -116,6 +116,21 @@ pub async fn init(pool: &PgPool) -> Result<(), sqlx::Error> {
         ON CONFLICT (locale_code, namespace) 
         DO UPDATE SET payload = EXCLUDED.payload;
         "###
+    )
+    .execute(pool)
+    .await?;
+
+    sqlx::query(
+        r#"
+        INSERT INTO translations (locale_code, namespace, payload)
+        VALUES 
+        ('ru', 'footer', '{
+            "certified": "F07 certified",
+            "certifiedSub": "(сертифицировано диагнозом F07)."
+        }'::jsonb)
+        ON CONFLICT (locale_code, namespace) 
+        DO UPDATE SET payload = EXCLUDED.payload;
+        "#
     )
     .execute(pool)
     .await?;
