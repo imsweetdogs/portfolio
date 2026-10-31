@@ -8,7 +8,7 @@ import { escapeHtml } from 'file:///home/sweetdogs/github/portfolio/frontend/nod
 import viteNodeEntry_mjs from 'file:///home/sweetdogs/github/portfolio/frontend/node_modules/@nuxt/vite-builder/dist/vite-node-entry.mjs';
 import { viteNodeFetch } from 'file:///home/sweetdogs/github/portfolio/frontend/node_modules/@nuxt/vite-builder/dist/vite-node.mjs';
 import { stringify, uneval } from 'file:///home/sweetdogs/github/portfolio/frontend/node_modules/devalue/src/index.js';
-import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL } from 'file:///home/sweetdogs/github/portfolio/frontend/node_modules/ufo/dist/index.mjs';
+import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, parseQuery, parsePath, joinRelativeURL } from 'file:///home/sweetdogs/github/portfolio/frontend/node_modules/ufo/dist/index.mjs';
 import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file:///home/sweetdogs/github/portfolio/frontend/node_modules/vue-bundle-renderer/dist/runtime.mjs';
 import destr, { destr as destr$1 } from 'file:///home/sweetdogs/github/portfolio/frontend/node_modules/destr/dist/index.mjs';
 import { createHead as createHead$1, propsToString, renderSSRHead } from 'file:///home/sweetdogs/github/portfolio/frontend/node_modules/unhead/dist/server.mjs';
@@ -43,6 +43,8 @@ import _LB91z6Ht2T49ncvhFWMKIA26eT4mdBc7tIFl06yLKKs from 'file:///home/sweetdogs
 import { existsSync, readFileSync, promises } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname as dirname$1, resolve as resolve$1 } from 'file:///home/sweetdogs/github/portfolio/frontend/node_modules/pathe/dist/index.mjs';
+import { getIcons } from 'file:///home/sweetdogs/github/portfolio/frontend/node_modules/@iconify/utils/lib/index.js';
+import { collections } from 'file:///home/sweetdogs/github/portfolio/frontend/.nuxt/nuxt-icon-server-bundle.mjs';
 import { resolveTags, walkResolver } from 'file:///home/sweetdogs/github/portfolio/frontend/node_modules/unhead/dist/utils.mjs';
 import { PromisesPlugin, TemplateParamsPlugin, AliasSortingPlugin, SafeInputPlugin } from 'file:///home/sweetdogs/github/portfolio/frontend/node_modules/unhead/dist/plugins.mjs';
 import { renderToString } from 'file:///home/sweetdogs/github/portfolio/frontend/node_modules/vue/server-renderer/index.mjs';
@@ -659,7 +661,12 @@ const _inlineRuntimeConfig = {
     }
   },
   "appSecret": "8a4f81681132c3091ed37e277b6ec0084860a569a47d708b5e67178928470766",
-  "public": {}
+  "public": {
+    "apiBase": "http://localhost:8080"
+  },
+  "icon": {
+    "serverKnownCssClasses": []
+  }
 };
 const envOptions = {
   prefix: "NITRO_",
@@ -1112,7 +1119,7 @@ const NUXT_PRERENDER_NO_SSR_ROUTES = ["/index.html","/200.html","/404.html"];
 const NUXT_NO_SCRIPTS_PATTERNS = [];
 const NUXT_PAGE_PATTERNS = [];
 const NUXT_SSR_STREAMING = false;
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[],"style":[],"script":[],"noscript":[]};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500;1,600&family=Geist:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"}],"style":[],"script":[],"noscript":[]};
 const appRootTag = "div";
 const appRootAttrs = {"id":"__nuxt"};
 const appTeleportTag = "div";
@@ -2508,6 +2515,72 @@ function assertAssetData(event, data) {
   return data;
 }
 
+const options = {"iconifyApiEndpoint":"https://api.iconify.design"};
+
+const warnOnceSet = /* @__PURE__ */ new Set();
+const DEFAULT_ENDPOINT = "https://api.iconify.design";
+function getInstallCommand(pkg) {
+  const ua = process.env.npm_config_user_agent || "";
+  if (ua.startsWith("pnpm")) return `pnpm add -D ${pkg}`;
+  if (ua.startsWith("yarn")) return `yarn add -D ${pkg}`;
+  if (ua.startsWith("bun")) return `bun add -D ${pkg}`;
+  return `npm i -D ${pkg}`;
+}
+const _nNIvZ9 = defineCachedEventHandler(async (event) => {
+  const collectionName = event.context.params?.collection?.replace(/\.json$/, "");
+  const collection = collectionName && Object.hasOwn(collections, collectionName) ? await collections[collectionName]?.() : null;
+  const apiEndPoint = options.iconifyApiEndpoint;
+  const icons = String(parseQuery(parsePath(event.path).search).icons || "").split(",");
+  if (!collectionName) return createError({ status: 400, message: "No collection specified" });
+  if (!icons.length) return createError({ status: 400, message: "No icons specified" });
+  if (!collection && true && !warnOnceSet.has(collectionName) && apiEndPoint === DEFAULT_ENDPOINT) {
+    consola$1.warn([
+      `[Icon] Collection \`${collectionName}\` is not found locally`,
+      `We suggest to install it via \`${getInstallCommand(`@iconify-json/${collectionName}`)}\` to provide the best end-user experience.`
+    ].join("\n"));
+    warnOnceSet.add(collectionName);
+  }
+  if (collection) {
+    const data = getIcons(
+      collection,
+      icons
+    );
+    consola$1.debug(`[Icon] serving ${icons.map((i) => "`" + collectionName + ":" + i + "`").join(",")} from bundled collection`);
+    return data;
+  }
+  {
+    const apiUrl = new URL(`./${collectionName}.json?icons=${icons.join(",")}`, apiEndPoint);
+    consola$1.debug(`[Icon] fetching ${icons.map((i) => "`" + collectionName + ":" + i + "`").join(",")} from iconify api`);
+    if (apiUrl.host !== new URL(apiEndPoint).host) {
+      return createError({ status: 400, message: "Invalid icon request" });
+    }
+    try {
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        return response.status === 404 ? createError({ status: 404 }) : createError({ status: 500, message: "Failed to fetch fallback icon" });
+      }
+      return response.json();
+    } catch (e) {
+      consola$1.error(e);
+      return createError({ status: 500, message: "Failed to fetch fallback icon" });
+    }
+  }
+  return createError({ status: 404 });
+}, {
+  group: "nuxt",
+  name: "icon",
+  // @ts-expect-error Nitro 3 API
+  allowQuery: ["icons"],
+  getKey(event) {
+    const collection = event.context.params?.collection?.replace(/\.json$/, "") || "unknown";
+    const icons = String(parseQuery(parsePath(event.path).search).icons || "").split(",");
+    return `${collection}_${icons[0]}_${icons.length}_${hash$1(icons.join(","))}`;
+  },
+  swr: true,
+  maxAge: 60 * 60 * 24 * 7
+  // 1 week
+});
+
 // ../nuxt/src/app/island-hash.ts
 /**
 * Strip Vue scoped-style attributes (`data-v-*`) from island props before hashing
@@ -3307,6 +3380,7 @@ const handlers = [
   { route: '', handler: _JxcSJR, lazy: false, middleware: true, method: undefined },
   { route: '/__nuxt_error', handler: _lazy_VBWO62, lazy: true, middleware: false, method: undefined },
   { route: '/__nuxt_dev__/error/**', handler: _lazy_DqRyE1, lazy: true, middleware: false, method: undefined },
+  { route: '/api/_nuxt_icon/:collection', handler: _nNIvZ9, lazy: false, middleware: false, method: undefined },
   { route: '/__nuxt_island/**', handler: handler$1, lazy: false, middleware: false, method: undefined },
   { route: '/**', handler: _lazy_VBWO62, lazy: true, middleware: false, method: undefined }
 ];
@@ -3780,9 +3854,9 @@ const PAYLOAD_FILENAME = "_payload.json" ;
 */
 function createNuxtRenderer(optionsOrInstance) {
 	const instance = "getRenderer" in optionsOrInstance ? optionsOrInstance : createRendererInstance(optionsOrInstance);
-	return { fetch: (event) => fetch(instance, event) };
+	return { fetch: (event) => fetch$1(instance, event) };
 }
-function fetch(instance, event) {
+function fetch$1(instance, event) {
 	const runtime = instance.options;
 	if (runtime.renderIsland && event.url.pathname.startsWith("/__nuxt_island/")) return Promise.resolve(runtime.renderIsland(event));
 	const isErrorRoute = event.url.pathname.startsWith("/__nuxt_error");

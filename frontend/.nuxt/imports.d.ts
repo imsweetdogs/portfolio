@@ -32,4 +32,10 @@ export { withCtx, withDirectives, withKeys, withMemo, withModifiers, withScopeId
 export { requestIdleCallback, cancelIdleCallback } from '#app/compat/idle-callback';
 export { setInterval } from '#app/compat/interval';
 export { defineLazyHydrationComponent } from '#app/composables/lazy-hydration';
+export { useBackground } from '../composables/useBackground';
+export { useI18n } from '../composables/useI18n';
+export { useLanyard, LanyardSpotify, LanyardActivity } from '../composables/useLanyard';
+export { useProjects } from '../composables/useProjects';
+export { useTexture } from '../composables/useTexture';
+export { LocaleItem, ProfileData, LinksData, HeaderNavItem, HeaderData, MediaData, HeroButtons, HeroAmbient, HeroData, FooterData, ProjectsModalLabels, ProjectsTranslations, SkillItem, SkillGroup, SkillsTranslations, AboutSpotifyLabels, AboutCodingLabels, AboutDiscordLabels, AboutSteamLabels, AboutSystemLabels, AboutGithubLabels, AboutTranslations, TranslationPayload } from '../types/i18n';
 export { useNuxtDevTools } from '../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools';

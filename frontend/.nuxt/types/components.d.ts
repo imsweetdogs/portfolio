@@ -14,6 +14,45 @@ type HydrationStrategies = {
 type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {}, {}, { hydrated: () => void }> & T
 
 interface _GlobalComponents {
+  CommonCanvasSection: typeof import("../../components/common/CanvasSection.vue")['default']
+  CommonFooter: typeof import("../../components/common/Footer.vue")['default']
+  CommonEffectsClickBurst: typeof import("../../components/common/effects/ClickBurst.vue")['default']
+  CommonEffectsCursorParticles: typeof import("../../components/common/effects/CursorParticles.vue")['default']
+  CommonHeader: typeof import("../../components/common/header/Header.vue")['default']
+  CommonHeaderMobileDrawer: typeof import("../../components/common/header/MobileDrawer.vue")['default']
+  CommonHeaderModulesGlassPill: typeof import("../../components/common/header/modules/GlassPill.vue")['default']
+  CommonHeaderModulesHeaderActionBtn: typeof import("../../components/common/header/modules/HeaderActionBtn.vue")['default']
+  CommonHeaderModulesHeaderAgeTicker: typeof import("../../components/common/header/modules/HeaderAgeTicker.vue")['default']
+  CommonHeaderModulesHeaderClock: typeof import("../../components/common/header/modules/HeaderClock.vue")['default']
+  CommonHeaderModulesHeaderLangBtn: typeof import("../../components/common/header/modules/HeaderLangBtn.vue")['default']
+  CommonHeaderModulesHeaderLogo: typeof import("../../components/common/header/modules/HeaderLogo.vue")['default']
+  CommonHeaderModulesHeaderMenuBtn: typeof import("../../components/common/header/modules/HeaderMenuBtn.vue")['default']
+  CommonHeaderModulesHeaderNav: typeof import("../../components/common/header/modules/HeaderNav.vue")['default']
+  CommonHeaderModulesHeaderNavLink: typeof import("../../components/common/header/modules/HeaderNavLink.vue")['default']
+  CommonHeaderModulesHeaderTextureBtn: typeof import("../../components/common/header/modules/HeaderTextureBtn.vue")['default']
+  CommonHeaderTypes: typeof import("../../components/common/header/types")['default']
+  SectionsAboutSection: typeof import("../../components/sections/about/AboutSection.vue")['default']
+  SectionsAboutModulesAboutSocials: typeof import("../../components/sections/about/modules/AboutSocials.vue")['default']
+  SectionsAboutModulesWidgetsActivityWidget: typeof import("../../components/sections/about/modules/widgets/ActivityWidget.vue")['default']
+  SectionsAboutModulesWidgetsGithubStatsWidget: typeof import("../../components/sections/about/modules/widgets/GithubStatsWidget.vue")['default']
+  SectionsAboutModulesWidgetsSpotifyWidget: typeof import("../../components/sections/about/modules/widgets/SpotifyWidget.vue")['default']
+  SectionsAboutModulesWidgetsSteamWidget: typeof import("../../components/sections/about/modules/widgets/SteamWidget.vue")['default']
+  SectionsAboutModulesWidgetsSystemWidget: typeof import("../../components/sections/about/modules/widgets/SystemWidget.vue")['default']
+  SectionsHeroSection: typeof import("../../components/sections/hero/HeroSection.vue")['default']
+  SectionsHeroModulesHeroActions: typeof import("../../components/sections/hero/modules/HeroActions.vue")['default']
+  SectionsHeroModulesHeroAmbientControls: typeof import("../../components/sections/hero/modules/HeroAmbientControls.vue")['default']
+  SectionsHeroModulesHeroAmbientVideo: typeof import("../../components/sections/hero/modules/HeroAmbientVideo.vue")['default']
+  SectionsHeroModulesHeroBadge: typeof import("../../components/sections/hero/modules/HeroBadge.vue")['default']
+  SectionsHeroModulesHeroSticker: typeof import("../../components/sections/hero/modules/HeroSticker.vue")['default']
+  SectionsHeroTypes: typeof import("../../components/sections/hero/types")['default']
+  SectionsProjectsSection: typeof import("../../components/sections/projects/ProjectsSection.vue")['default']
+  SectionsProjectsModulesProjectCard: typeof import("../../components/sections/projects/modules/ProjectCard.vue")['default']
+  SectionsProjectsModulesProjectModal: typeof import("../../components/sections/projects/modules/ProjectModal.vue")['default']
+  SectionsProjectsTypes: typeof import("../../components/sections/projects/types")['default']
+  SectionsSkillsSection: typeof import("../../components/sections/skills/SkillsSection.vue")['default']
+  SectionsSkillsModulesSkillBadge: typeof import("../../components/sections/skills/modules/SkillBadge.vue")['default']
+  SectionsSkillsModulesSkillGroupCard: typeof import("../../components/sections/skills/modules/SkillGroupCard.vue")['default']
+  SectionsSkillsTypes: typeof import("../../components/sections/skills/types")['default']
   /**
    * Displays the welcome screen used by new Nuxt projects.
    *
@@ -87,6 +126,7 @@ interface _GlobalComponents {
    * @see https://nuxt.com/docs/4.x/api/components/nuxt-picture
    */
   NuxtPicture: typeof import("../../node_modules/nuxt/dist/app/components/nuxt-stubs")['NuxtPicture']
+  Icon: typeof import("../../node_modules/@nuxt/icon/dist/runtime/components/index")['default']
   /**
    * Renders the current page from the `pages/` directory.
    *
@@ -108,6 +148,45 @@ interface _GlobalComponents {
    * @see https://nuxt.com/docs/4.x/api/components/nuxt-island
    */
   NuxtIsland: typeof import("../../node_modules/nuxt/dist/app/components/nuxt-island")['default']
+  LazyCommonCanvasSection: LazyComponent<typeof import("../../components/common/CanvasSection.vue")['default']>
+  LazyCommonFooter: LazyComponent<typeof import("../../components/common/Footer.vue")['default']>
+  LazyCommonEffectsClickBurst: LazyComponent<typeof import("../../components/common/effects/ClickBurst.vue")['default']>
+  LazyCommonEffectsCursorParticles: LazyComponent<typeof import("../../components/common/effects/CursorParticles.vue")['default']>
+  LazyCommonHeader: LazyComponent<typeof import("../../components/common/header/Header.vue")['default']>
+  LazyCommonHeaderMobileDrawer: LazyComponent<typeof import("../../components/common/header/MobileDrawer.vue")['default']>
+  LazyCommonHeaderModulesGlassPill: LazyComponent<typeof import("../../components/common/header/modules/GlassPill.vue")['default']>
+  LazyCommonHeaderModulesHeaderActionBtn: LazyComponent<typeof import("../../components/common/header/modules/HeaderActionBtn.vue")['default']>
+  LazyCommonHeaderModulesHeaderAgeTicker: LazyComponent<typeof import("../../components/common/header/modules/HeaderAgeTicker.vue")['default']>
+  LazyCommonHeaderModulesHeaderClock: LazyComponent<typeof import("../../components/common/header/modules/HeaderClock.vue")['default']>
+  LazyCommonHeaderModulesHeaderLangBtn: LazyComponent<typeof import("../../components/common/header/modules/HeaderLangBtn.vue")['default']>
+  LazyCommonHeaderModulesHeaderLogo: LazyComponent<typeof import("../../components/common/header/modules/HeaderLogo.vue")['default']>
+  LazyCommonHeaderModulesHeaderMenuBtn: LazyComponent<typeof import("../../components/common/header/modules/HeaderMenuBtn.vue")['default']>
+  LazyCommonHeaderModulesHeaderNav: LazyComponent<typeof import("../../components/common/header/modules/HeaderNav.vue")['default']>
+  LazyCommonHeaderModulesHeaderNavLink: LazyComponent<typeof import("../../components/common/header/modules/HeaderNavLink.vue")['default']>
+  LazyCommonHeaderModulesHeaderTextureBtn: LazyComponent<typeof import("../../components/common/header/modules/HeaderTextureBtn.vue")['default']>
+  LazyCommonHeaderTypes: LazyComponent<typeof import("../../components/common/header/types")['default']>
+  LazySectionsAboutSection: LazyComponent<typeof import("../../components/sections/about/AboutSection.vue")['default']>
+  LazySectionsAboutModulesAboutSocials: LazyComponent<typeof import("../../components/sections/about/modules/AboutSocials.vue")['default']>
+  LazySectionsAboutModulesWidgetsActivityWidget: LazyComponent<typeof import("../../components/sections/about/modules/widgets/ActivityWidget.vue")['default']>
+  LazySectionsAboutModulesWidgetsGithubStatsWidget: LazyComponent<typeof import("../../components/sections/about/modules/widgets/GithubStatsWidget.vue")['default']>
+  LazySectionsAboutModulesWidgetsSpotifyWidget: LazyComponent<typeof import("../../components/sections/about/modules/widgets/SpotifyWidget.vue")['default']>
+  LazySectionsAboutModulesWidgetsSteamWidget: LazyComponent<typeof import("../../components/sections/about/modules/widgets/SteamWidget.vue")['default']>
+  LazySectionsAboutModulesWidgetsSystemWidget: LazyComponent<typeof import("../../components/sections/about/modules/widgets/SystemWidget.vue")['default']>
+  LazySectionsHeroSection: LazyComponent<typeof import("../../components/sections/hero/HeroSection.vue")['default']>
+  LazySectionsHeroModulesHeroActions: LazyComponent<typeof import("../../components/sections/hero/modules/HeroActions.vue")['default']>
+  LazySectionsHeroModulesHeroAmbientControls: LazyComponent<typeof import("../../components/sections/hero/modules/HeroAmbientControls.vue")['default']>
+  LazySectionsHeroModulesHeroAmbientVideo: LazyComponent<typeof import("../../components/sections/hero/modules/HeroAmbientVideo.vue")['default']>
+  LazySectionsHeroModulesHeroBadge: LazyComponent<typeof import("../../components/sections/hero/modules/HeroBadge.vue")['default']>
+  LazySectionsHeroModulesHeroSticker: LazyComponent<typeof import("../../components/sections/hero/modules/HeroSticker.vue")['default']>
+  LazySectionsHeroTypes: LazyComponent<typeof import("../../components/sections/hero/types")['default']>
+  LazySectionsProjectsSection: LazyComponent<typeof import("../../components/sections/projects/ProjectsSection.vue")['default']>
+  LazySectionsProjectsModulesProjectCard: LazyComponent<typeof import("../../components/sections/projects/modules/ProjectCard.vue")['default']>
+  LazySectionsProjectsModulesProjectModal: LazyComponent<typeof import("../../components/sections/projects/modules/ProjectModal.vue")['default']>
+  LazySectionsProjectsTypes: LazyComponent<typeof import("../../components/sections/projects/types")['default']>
+  LazySectionsSkillsSection: LazyComponent<typeof import("../../components/sections/skills/SkillsSection.vue")['default']>
+  LazySectionsSkillsModulesSkillBadge: LazyComponent<typeof import("../../components/sections/skills/modules/SkillBadge.vue")['default']>
+  LazySectionsSkillsModulesSkillGroupCard: LazyComponent<typeof import("../../components/sections/skills/modules/SkillGroupCard.vue")['default']>
+  LazySectionsSkillsTypes: LazyComponent<typeof import("../../components/sections/skills/types")['default']>
   /**
    * Lazy-loaded version of `<NuxtWelcome>`.
    *
@@ -205,6 +284,7 @@ interface _GlobalComponents {
    * @see https://nuxt.com/docs/4.x/api/components/nuxt-picture
    */
   LazyNuxtPicture: LazyComponent<typeof import("../../node_modules/nuxt/dist/app/components/nuxt-stubs")['NuxtPicture']>
+  LazyIcon: LazyComponent<typeof import("../../node_modules/@nuxt/icon/dist/runtime/components/index")['default']>
   /**
    * Lazy-loaded version of `<NuxtPage>`.
    *
@@ -234,6 +314,12 @@ interface _GlobalComponents {
 
 declare module 'vue' {
   export interface GlobalComponents extends _GlobalComponents { }
+}
+
+declare module '#app' {
+  interface NuxtAppLiterals {
+    componentName: "Icon" | "LazyIcon" | (string & {})
+  }
 }
 
 export {}
