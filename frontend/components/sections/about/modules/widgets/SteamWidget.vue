@@ -32,79 +32,71 @@ const favoriteGames = [
 </script>
 
 <template>
-  <div class="flex flex-col justify-between rounded-3xl border border-zinc-800/80 bg-zinc-950/60 p-6 backdrop-blur-md transition-all hover:border-zinc-700 select-none shadow-xl gap-6 w-full">
+  <div class="flex flex-col justify-between rounded-3xl border border-zinc-800/80 bg-zinc-950/60 p-5 sm:p-6 backdrop-blur-md transition-all hover:border-zinc-700 select-none shadow-xl gap-5 sm:gap-6 w-full">
     
     <!-- Шапка профиля Steam -->
-    <div class="flex items-center justify-between gap-4 border-b border-zinc-800/60 pb-4">
-      <div class="flex items-center gap-3.5">
-        <div class="flex h-11 w-11 items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900/80 text-sky-400 shadow-md">
+    <div class="flex items-center justify-between gap-3 border-b border-zinc-800/60 pb-4">
+      <div class="flex items-center gap-3">
+        <div class="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900/80 text-sky-400 shadow-md flex-shrink-0">
           <Icon name="simple-icons:steam" class="w-5 h-5" />
         </div>
 
-        <div class="flex flex-col">
-          <!-- Просто Steam без слова Showcase и без стрелки -->
+        <div class="flex flex-col min-w-0">
+          <!-- Текст берётся строго из переводов или пропсов -->
           <a 
             :href="steamProfileUrl" 
             target="_blank" 
             rel="noopener noreferrer"
-            class="font-sans font-bold text-base text-zinc-100 hover:text-sky-300 transition-colors"
+            class="font-sans font-bold text-sm sm:text-base text-zinc-100 hover:text-sky-300 transition-colors truncate"
           >
-            Steam
+            {{ labels?.title || 'Steam' }}
           </a>
-          <span class="font-mono text-xs text-zinc-500">@sweetdogs</span>
+          <span class="font-mono text-xs text-zinc-500 truncate">@sweetdogs</span>
         </div>
       </div>
 
-      <!-- Уровень профиля: 20 -->
-      <div class="flex items-center gap-2 rounded-xl border border-zinc-700/60 bg-zinc-900/60 px-3.5 py-1.5 font-mono text-xs text-zinc-300 shadow-inner">
-        <Icon name="lucide:award" class="w-4 h-4 text-amber-400" />
-        <span>{{ labels?.level || 'Уровень профиля' }}: <strong class="text-white font-bold">20</strong></span>
+      <!-- Уровень профиля (лейбл из переводов) -->
+      <div class="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-zinc-700/60 bg-zinc-900/60 px-3 py-1.5 font-mono text-xs text-zinc-300 shadow-inner flex-shrink-0">
+        <Icon name="lucide:award" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
+        <span>{{ labels?.level || 'Уровень' }}: <strong class="text-white font-bold">20</strong></span>
       </div>
     </div>
 
     <!-- Витрина любимых игр -->
-    <div class="flex flex-col gap-3.5 w-full">
+    <div class="flex flex-col gap-3 w-full">
       <span class="font-mono text-xs text-zinc-500 uppercase tracking-wider">
         {{ labels?.topGames || 'Любимые игры' }}
       </span>
 
-      <!-- 3 колонки высотой 380px с выравниванием по верхнему краю -->
-      <div 
-        class="w-full gap-4"
-        style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));"
-      >
+      <!-- Сетка: 1 колонка на мобиле (grid-cols-1), 3 колонки начиная с планшета (sm:grid-cols-3) -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 w-full">
         <a
           v-for="game in favoriteGames"
           :key="game.appId"
           :href="game.url"
           target="_blank"
           rel="noopener noreferrer"
-          class="group relative w-full rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-950 shadow-lg transition-all duration-300 hover:border-zinc-500 hover:-translate-y-1.5 select-none flex flex-col justify-end"
-          style="height: 380px; min-height: 380px;"
+          class="group relative w-full rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900 shadow-lg transition-all duration-300 hover:border-zinc-500 hover:-translate-y-1 select-none flex flex-col justify-end h-48 sm:h-80 md:h-[380px]"
         >
-          <!-- Картинка с выравниванием по верху, чтобы вошло всё название Barotrauma -->
+          <!-- Фоновый арт: на мобиле центрирован, на десктопе по верхнему краю -->
           <img
             :src="game.banner"
             :alt="game.name"
             loading="lazy"
-            class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            style="object-position: center top;"
+            class="absolute inset-0 w-full h-full object-cover object-center sm:object-top transition-transform duration-500 group-hover:scale-105"
           />
 
           <!-- Градиент снизу вверх -->
-          <div 
-            class="absolute inset-0 pointer-events-none transition-opacity duration-300 opacity-90 group-hover:opacity-75"
-            style="background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%);"
-          />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent opacity-90 group-hover:opacity-75 transition-opacity pointer-events-none" />
 
-          <!-- Название игры поверх градиента внизу -->
-          <div class="relative z-10 p-4 flex items-center justify-between font-mono">
-            <span class="font-semibold text-sm text-zinc-100 group-hover:text-white transition-colors truncate">
+          <!-- Название игры -->
+          <div class="relative z-10 p-3.5 sm:p-4 flex items-center justify-between font-mono">
+            <span class="font-semibold text-xs sm:text-sm text-zinc-100 group-hover:text-white transition-colors truncate">
               {{ game.name }}
             </span>
             <Icon 
               name="lucide:arrow-up-right" 
-              class="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors flex-shrink-0 ml-1.5 opacity-60 group-hover:opacity-100" 
+              class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-400 group-hover:text-white transition-colors flex-shrink-0 ml-1.5 opacity-60 group-hover:opacity-100" 
             />
           </div>
         </a>

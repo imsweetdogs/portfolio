@@ -6,12 +6,10 @@ withDefaults(defineProps<{
   stickerUrl?: string
   easterStickerUrl?: string
   easterEggText?: string
-  title?: string
 }>(), {
   stickerUrl: '/sticker.webm',
   easterStickerUrl: '/sticker2.webm',
-  easterEggText: 'пасхалка найдена!',
-  title: 'Кликни 10 раз'
+  easterEggText: 'пасхалка найдена!'
 })
 
 const clicks = ref(0)
@@ -41,7 +39,7 @@ const handleClick = () => {
 </script>
 
 <template>
-  <span data-no-burst class="relative inline-flex items-center align-middle mx-2 sm:mx-4 -translate-y-1 sm:-translate-y-2">
+  <span class="relative inline-flex items-center align-middle mx-2 sm:mx-4 -translate-y-1 sm:-translate-y-2">
     <!-- Бейдж пасхалки -->
     <Transition
       enter-active-class="transition duration-150 ease-out"
@@ -53,7 +51,7 @@ const handleClick = () => {
     >
       <div 
         v-if="isEasterEgg" 
-        class="pointer-events-none absolute -top-10 sm:-top-11 left-1/2 -translate-x-1/2 z-30"
+        class="pointer-events-none absolute -top-11 left-1/2 -translate-x-1/2 z-30"
       >
         <span class="block whitespace-nowrap rounded-md bg-rose-600 px-2.5 py-0.5 font-mono text-[11px] sm:text-xs font-bold text-white shadow-2xl shadow-rose-950 animate-bounce uppercase tracking-wider">
           {{ easterEggText }}
@@ -61,12 +59,10 @@ const handleClick = () => {
       </div>
     </Transition>
 
-    <!-- Стикер: точные размеры и эффекты референса -->
     <div
       @click="handleClick"
-      class="relative w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-2xl sm:rounded-3xl shadow-2xl hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer overflow-hidden bg-zinc-900/60 border border-white/10"
+      class="relative w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-2xl sm:rounded-3xl shadow-2xl hover:scale-110 active:scale-95 transition-transform duration-200 cursor-pointer overflow-hidden bg-zinc-900/60 border border-white/10"
       :class="{ 'ring-4 ring-rose-500/80 scale-110': isEasterEgg }"
-      :title="title"
     >
       <!-- Дефолтный стикер -->
       <video
@@ -80,7 +76,7 @@ const handleClick = () => {
         :class="isEasterEgg ? 'opacity-0' : 'opacity-100'"
       />
 
-      <!-- Пасхальный стикер (стартует с 0:00) -->
+      <!-- Пасхальный стикер -->
       <video
         v-if="easterStickerUrl"
         ref="easterVideoRef"
