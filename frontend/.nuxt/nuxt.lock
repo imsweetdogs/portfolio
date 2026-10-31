@@ -1,0 +1,10 @@
+{
+  "pid": 217989,
+  "startedAt": 1793449242248,
+  "interactive": true,
+  "command": "dev",
+  "cwd": "/home/sweetdogs/github/portfolio/frontend",
+  "port": 3000,
+  "hostname": "::1",
+  "url": "http://[::1]:3000"
+}
