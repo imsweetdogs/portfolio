@@ -62,7 +62,7 @@ pub fn deep_merge(base: &mut Value, override_val: Value) {
     }
 }
 
-async fn resolve_fallback_chain(pool: &PgPool, target_lang: &str) -> Result<Vec<String>, sqlx::Error> {
+pub async fn resolve_fallback_chain(pool: &PgPool, target_lang: &str) -> Result<Vec<String>, sqlx::Error> {
     let default_lang: String = sqlx::query_scalar(
         "SELECT code FROM locales WHERE is_default = TRUE LIMIT 1"
     )

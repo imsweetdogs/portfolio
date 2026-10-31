@@ -7,12 +7,10 @@ pub async fn init(pool: &PgPool) -> Result<(), sqlx::Error> {
         CREATE TABLE IF NOT EXISTS projects (
             id VARCHAR(32) PRIMARY KEY,
             year VARCHAR(8) NOT NULL,
-            title JSONB NOT NULL,
-            description JSONB NOT NULL,
-            tags TEXT[] NOT NULL DEFAULT '{}',
             image TEXT NOT NULL,
             link TEXT,
             github TEXT,
+            tags TEXT[] NOT NULL DEFAULT '{}',
             order_index INT NOT NULL DEFAULT 0,
             created_at TIMESTAMPTZ DEFAULT NOW()
         );
