@@ -29,6 +29,7 @@ fn create_app(pool: PgPool) -> Router {
     Router::new()
         .nest("/api/v1/locales", routes::locales::router())
         .nest("/api/v1/translations", routes::translations::router())
+        .nest("/api/v1/projects", routes::projects::router())
         .layer(cors)
         .with_state(pool)
 }

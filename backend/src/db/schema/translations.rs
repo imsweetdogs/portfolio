@@ -126,13 +126,18 @@ pub async fn init(pool: &PgPool) -> Result<(), sqlx::Error> {
         VALUES 
         ('ru', 'projects', '{
             "title": "Каталог",
-            "titleAccent": "проектов.",
-            "description": "Библиография моих работ: сервисы на Rust, архитектурные решения и веб-приложения.",
+            "titleAccent": "проектов",
+            "subtitle": "Библиография моих работ: сервисы на Rust, архитектурные решения и веб-приложения.",
             "allTag": "Все",
             "details": "Подробнее",
-            "collection": "Коллекция:",
-            "itemsSuffix": "проектов",
-            "empty": "В этой категории пока нет проектов."
+            "collectionPrefix": "Коллекция:",
+            "collectionSuffix": "проектов",
+            "modal": {
+                "close": "Закрыть",
+                "repo": "Репозиторий",
+                "site": "Сайт",
+                "privateCode": "NDA"
+            }
         }'::jsonb)
         ON CONFLICT (locale_code, namespace) 
         DO UPDATE SET payload = EXCLUDED.payload;
