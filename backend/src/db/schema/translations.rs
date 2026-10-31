@@ -17,26 +17,81 @@ pub async fn init(pool: &PgPool) -> Result<(), sqlx::Error> {
     .execute(pool)
     .await?;
 
-    // Сидим русский базовый эталон (header, hero, media)
+    // 1. DATA (Профиль): DO NOTHING
+    sqlx::query(
+        r#"
+        INSERT INTO translations (locale_code, namespace, payload)
+        VALUES 
+        ('ru', 'data', '{
+            "birthDate": "2005-09-16T00:00:00Z",
+            "timezone": "Europe/Moscow",
+            "timezoneIdentifier": "MSK"
+        }'::jsonb)
+        ON CONFLICT (locale_code, namespace) DO NOTHING;
+        "#
+    )
+    .execute(pool)
+    .await?;
+
+    // 2. LINKS (Ссылки): DO NOTHING (Fixed with r##" ... "##)
+    sqlx::query(
+        r##"
+        INSERT INTO translations (locale_code, namespace, payload)
+        VALUES 
+        ('ru', 'links', '{
+            "tg": "https://t.me/notsweetdogs",
+            "rss": "https://blog.sweetdogs.ru/data/rss",
+            "github": "https://github.com/imsweetdogs",
+            "email": "offers@sweetdogs.ru",
+            "discord": "https://discord.gg/eggDdRqRu3",
+            "steam": "https://steamcommunity.com/id/sweetdogs",
+            "projectsAnchor": "#projects"
+        }'::jsonb)
+        ON CONFLICT (locale_code, namespace) DO NOTHING;
+        "##
+    )
+    .execute(pool)
+    .await?;
+
+    // 3. MEDIA (Реальные ссылки Neon): DO NOTHING
     sqlx::query(
         r#"
         INSERT INTO translations (locale_code, namespace, payload)
         VALUES 
         ('ru', 'media', '{
-            "posterUrl": "https://cdn.sweetdogs.ru/media/poster.webp",
-            "videoUrl": "https://cdn.sweetdogs.ru/media/ambient.webm",
-            "stickerUrl": "https://cdn.sweetdogs.ru/stickers/avatar.webp",
-            "easterStickerUrl": "https://cdn.sweetdogs.ru/stickers/easter.webp",
-            "avatarUrl": "https://cdn.sweetdogs.ru/brand/avatar.webp",
-            "ogImageUrl": "https://cdn.sweetdogs.ru/brand/og.webp",
-            "faviconUrl": "https://cdn.sweetdogs.ru/brand/favicon.svg"
-        }'::jsonb),
+            "videoUrl": "https://br-bold-forest-b953969w.storage.c-7.eu-central-1.aws.neon.tech/portfolio/background.mp4",
+            "stickerUrl": "https://br-bold-forest-b953969w.storage.c-7.eu-central-1.aws.neon.tech/portfolio/stickers/-WqiGJ3j.webm",
+            "easterStickerUrl": "https://br-bold-forest-b953969w.storage.c-7.eu-central-1.aws.neon.tech/portfolio/stickers/ie-hBfC-.webm",
+            "avatarUrl": "https://br-bold-forest-b953969w.storage.c-7.eu-central-1.aws.neon.tech/portfolio/logo.svg",
+            "ogImageUrl": "https://br-bold-forest-b953969w.storage.c-7.eu-central-1.aws.neon.tech/portfolio/logo.svg",
+            "faviconUrl": "https://br-bold-forest-b953969w.storage.c-7.eu-central-1.aws.neon.tech/portfolio/logo.svg",
+            "stickers": [
+                "https://br-bold-forest-b953969w.storage.c-7.eu-central-1.aws.neon.tech/portfolio/stickers/-WqiGJ3j.webm",
+                "https://br-bold-forest-b953969w.storage.c-7.eu-central-1.aws.neon.tech/portfolio/stickers/ie-hBfC-.webm",
+                "https://br-bold-forest-b953969w.storage.c-7.eu-central-1.aws.neon.tech/portfolio/stickers/pueQB29u.webm"
+            ]
+        }'::jsonb)
+        ON CONFLICT (locale_code, namespace) DO NOTHING;
+        "#
+    )
+    .execute(pool)
+    .await?;
 
+    // 4. HEADER & HERO: DO UPDATE (тексты обновляются из кода)
+    sqlx::query(
+        r###"
+        INSERT INTO translations (locale_code, namespace, payload)
+        VALUES 
         ('ru', 'header', '{
             "menu": "Меню",
             "close": "Закрыть",
             "action": "Связаться",
-            "textureTitle": "Переключить текстуру шума"
+            "textureTitle": "Переключить текстуру шума",
+            "nav": [
+                { "name": "Проекты", "href": "#projects", "icon": "lucide:box" },
+                { "name": "Навыки", "href": "#skills", "icon": "lucide:wrench" },
+                { "name": "Обо мне", "href": "#about", "icon": "lucide:sparkles" }
+            ]
         }'::jsonb),
 
         ('ru', 'hero', '{
@@ -44,7 +99,6 @@ pub async fn init(pool: &PgPool) -> Result<(), sqlx::Error> {
             "rolePrefix": "Full-stack",
             "roleSuffix": "разработчик.",
             "description": "На фронте использую <b>Vue 3, Nuxt</b> и <b>Tailwind</b>, а бэкенды пишу на <b>Rust (Axum, Tokio)</b> или на <b>Python</b> когда поджимает время. Использую <b>NixOS</b> в повседневных делах.",
-            "stickerTitle": "sweetdogs avatar",
             "easterEggText": "пасхалка найдена!",
             "tgBanner": "Следите за новыми проектами в моём Telegram канале",
             "buttons": {
@@ -53,14 +107,15 @@ pub async fn init(pool: &PgPool) -> Result<(), sqlx::Error> {
                 "contact": "Связаться со мной"
             },
             "ambient": {
-                "title": "Эмбиент",
-                "enabled": "Вкл",
-                "disabled": "Выкл",
-                "soundTitle": "Звук"
+                "ambientOn": "Эмбиент: Вкл",
+                "ambientOff": "Эмбиент: Выкл",
+                "soundOn": "Звук: 7%",
+                "soundMuted": "Звук: Выкл"
             }
         }'::jsonb)
-        ON CONFLICT (locale_code, namespace) DO NOTHING;
-        "#
+        ON CONFLICT (locale_code, namespace) 
+        DO UPDATE SET payload = EXCLUDED.payload;
+        "###
     )
     .execute(pool)
     .await?;

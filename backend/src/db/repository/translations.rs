@@ -1,4 +1,3 @@
-// backend/src/db/repository/translations.rs
 use serde_json::{Map, Value};
 use sqlx::PgPool;
 
@@ -11,11 +10,52 @@ struct SectionRow {
 
 pub fn deep_merge(base: &mut Value, override_val: Value) {
     match (base, override_val) {
+        // 1. Мердж объектов {}
         (Value::Object(base_map), Value::Object(override_map)) => {
             for (k, v) in override_map {
                 deep_merge(base_map.entry(k).or_insert(Value::Null), v);
             }
         }
+
+        // 2. Мердж массивов [] (для nav и любых списков элементов)
+        (Value::Array(base_list), Value::Array(override_list)) => {
+            // Проверяем, содержат ли элементы уникальный ключ: "href" или "id"
+            let has_identifiers = base_list.iter().any(|item| {
+                item.as_object()
+                    .map_or(false, |obj| obj.contains_key("href") || obj.contains_key("id"))
+            });
+
+            if has_identifiers {
+                for override_item in override_list {
+                    if let Some(override_obj) = override_item.as_object() {
+                        let identifier = override_obj
+                            .get("href")
+                            .or_else(|| override_obj.get("id"));
+
+                        if let Some(id_val) = identifier {
+                            // Ищем совпадение в базовом списке по href/id
+                            if let Some(base_item) = base_list.iter_mut().find(|b| {
+                                b.as_object().map_or(false, |b_obj| {
+                                    b_obj.get("href") == Some(id_val)
+                                        || b_obj.get("id") == Some(id_val)
+                                })
+                            }) {
+                                // Нашли: мерджим поля внутри этого конкретного элемента
+                                deep_merge(base_item, override_item);
+                                continue;
+                            }
+                        }
+                    }
+                    // Если элемента с таким href/id ещё не было — добавляем в конец
+                    base_list.push(override_item);
+                }
+            } else {
+                // Если массив простых строк/чисел без id — перезаписываем
+                *base_list = override_list;
+            }
+        }
+
+        // 3. Скаляры (строки, булевы, числа)
         (base_slot, override_val) => {
             *base_slot = override_val;
         }
@@ -54,7 +94,7 @@ async fn resolve_fallback_chain(pool: &PgPool, target_lang: &str) -> Result<Vec<
     Ok(chain)
 }
 
-// Забирает ВСЕ секции (включая media) со слоеным мерджем
+// Забирает ВСЕ секции со слоеным мерджем
 pub async fn find_all_by_lang(pool: &PgPool, lang: &str) -> Result<Value, sqlx::Error> {
     let chain = resolve_fallback_chain(pool, lang).await?;
 
@@ -73,7 +113,25 @@ pub async fn find_all_by_lang(pool: &PgPool, lang: &str) -> Result<Value, sqlx::
 
     for ns in namespaces {
         let mut merged = Value::Object(Map::new());
-        for code in &chain {
+
+        // Для media и data исключаем промежуточный intl:
+        // Цепочка строго [default] -> [target]
+        let sub_chain: Vec<&String> = if ns == "media" || ns == "data" {
+            let mut list = Vec::new();
+            if let Some(first) = chain.first() {
+                list.push(first);
+            }
+            if let Some(last) = chain.last() {
+                if last != chain.first().unwrap() {
+                    list.push(last);
+                }
+            }
+            list
+        } else {
+            chain.iter().collect()
+        };
+
+        for code in sub_chain {
             if let Some(row) = rows.iter().find(|r| r.namespace == ns && &r.locale_code == code) {
                 deep_merge(&mut merged, row.payload.clone());
             }
