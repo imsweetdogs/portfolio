@@ -22,7 +22,7 @@ const tick = () => {
 
 onMounted(() => {
   tick()
-  timer = setInterval(tick, 50)
+  timer = setInterval(tick, 300)
 })
 
 onUnmounted(() => {

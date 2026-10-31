@@ -97,9 +97,10 @@ pub async fn init(pool: &PgPool) -> Result<(), sqlx::Error> {
             "greeting": "Привет! Я",
             "rolePrefix": "Full-stack",
             "roleSuffix": "разработчик.",
-            "description": "На фронте использую <b>Vue 3, Nuxt</b> и <b>Tailwind</b>, а бэкенды пишу на <b>Rust (Axum, Tokio)</b> или на <b>Python</b> когда поджимает время. Использую <b>NixOS</b> в повседневных делах.",
+            "description": "На фронте использую <span class=\"text-zinc-200 font-medium\">Vue 3, Nuxt</span> и <span class=\"text-zinc-200 font-medium\">Tailwind</span>, а бэкенды пишу на <span class=\"text-zinc-200 font-medium\">Rust (Axum, Tokio)</span> или на <span class=\"text-zinc-200 font-medium\">Python</span> когда поджимает время. Использую <span class=\"text-cyan-300 font-medium\">NixOS</span> в повседневных делах.",
             "easterEggText": "пасхалка найдена!",
             "tgBanner": "Следите за новыми проектами в моём Telegram канале",
+            "rssTitle": "RSS / Блог",
             "buttons": {
                 "works": "Мои работы",
                 "github": "GitHub",

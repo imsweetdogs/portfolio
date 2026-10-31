@@ -8,6 +8,8 @@ node_modules/
 dist/
 .nitro/
 .cache/
+.data/
+.server/
 
 # Sensitive envs
 .env

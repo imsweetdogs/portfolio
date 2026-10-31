@@ -1,9 +1,12 @@
+<!-- frontend/app.vue -->
 <script setup lang="ts">
 import Header from '~/components/common/header/Header.vue'
+import Footer from '~/components/common/Footer.vue'
 import ClickBurst from '~/components/common/effects/ClickBurst.vue'
 import CursorParticles from '~/components/common/effects/CursorParticles.vue'
 import CanvasSection from '~/components/common/CanvasSection.vue'
-import Footer from '~/components/common/Footer.vue'
+
+import HeroSection from '~/components/sections/hero/HeroSection.vue'
 
 import { useI18n } from '~/composables/useI18n'
 import { useTexture } from '~/composables/useTexture'
@@ -38,7 +41,7 @@ const handleOpenTicket = () => {
 </script>
 
 <template>
-  <div class="relative min-h-screen bg-[#080809] text-zinc-100 font-mono antialiased selection:bg-indigo-500/20 selection:text-indigo-300 overflow-x-hidden">
+  <div class="select-none relative min-h-screen bg-[#080809] text-zinc-100 font-mono antialiased selection:bg-indigo-500/20 selection:text-indigo-300 overflow-x-hidden flex flex-col justify-between">
     
     <!-- Эффекты мыши -->
     <CursorParticles />
@@ -63,7 +66,22 @@ const handleOpenTicket = () => {
       @toggle-texture="toggleTexture"
       @open-ticket="handleOpenTicket"
     />
-    
+
+    <!-- Основной контент -->
+    <main class="relative z-10 flex-grow">
+      <!-- 1. HERO -->
+      <CanvasSection pattern="grid" :fade-bottom="true" class="z-20">
+        <HeroSection
+          v-if="translations.hero"
+          :i18n="translations.hero"
+          :links="translations.links"
+          :media="translations.media"
+          @open-ticket="handleOpenTicket"
+        />
+      </CanvasSection>
+    </main>
+
+    <!-- 2. ФУТЕР -->
     <CanvasSection pattern="none" class="z-20">
       <Footer 
         :links="translations.links" 
