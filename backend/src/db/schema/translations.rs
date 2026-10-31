@@ -150,6 +150,88 @@ pub async fn init(pool: &PgPool) -> Result<(), sqlx::Error> {
         r#"
         INSERT INTO translations (locale_code, namespace, payload)
         VALUES 
+        ('ru', 'skills', '{
+            "title": "Мои",
+            "titleAccent": "навыки",
+            "description": "Я создаю быстрые, надежные и масштабируемые веб-платформы. В работе с фронтендом использую TS, Vue и Nuxt, а на бэкенде пишу на Rust и Python. У меня есть опыт работы с CI/CD, контейнеризацией и современными средами развертывания, стремлюсь к эффективной и удобной в поддержке инфраструктуре на всех проектах. 🐻",
+            "groups": [
+                {
+                    "id": "frontend",
+                    "title": "разработка",
+                    "titleAccent": "Фронтенд",
+                    "icon": "lucide:sparkles",
+                    "previewIcons": [
+                        "simple-icons:typescript",
+                        "simple-icons:vuedotjs",
+                        "simple-icons:nuxtdotjs",
+                        "simple-icons:tailwindcss"
+                    ],
+                    "description": "Я разрабатываю адаптивные и доступные сайты с упором на чистый дизайн, плавные взаимодействия и внимание к деталям.",
+                    "skills": [
+                        { "name": "HTML", "icon": "simple-icons:html5" },
+                        { "name": "CSS", "icon": "simple-icons:css3" },
+                        { "name": "TypeScript", "icon": "simple-icons:typescript" },
+                        { "name": "Vue", "icon": "simple-icons:vuedotjs" },
+                        { "name": "Nuxt", "icon": "simple-icons:nuxtdotjs" },
+                        { "name": "Astro", "icon": "simple-icons:astro" },
+                        { "name": "Tailwind", "icon": "simple-icons:tailwindcss" }
+                    ]
+                },
+                {
+                    "id": "backend",
+                    "title": "разработка",
+                    "titleAccent": "Бекенд",
+                    "icon": "lucide:server",
+                    "previewIcons": [
+                        "simple-icons:rust",
+                        "simple-icons:python",
+                        "simple-icons:postgresql",
+                        "simple-icons:redis"
+                    ],
+                    "description": "Я создаю стабильные и эффективные серверные системы, обеспечивающие надежную работу и легкую интеграцию с другими сервисами.",
+                    "skills": [
+                        { "name": "Rust", "icon": "simple-icons:rust" },
+                        { "name": "Python", "icon": "simple-icons:python" },
+                        { "name": "TypeScript", "icon": "simple-icons:typescript" },
+                        { "name": "PostgreSQL", "icon": "simple-icons:postgresql" },
+                        { "name": "Redis", "icon": "simple-icons:redis" },
+                        { "name": "Node", "icon": "simple-icons:nodedotjs" },
+                        { "name": "Bun", "icon": "simple-icons:bun" }
+                    ]
+                },
+                {
+                    "id": "devops",
+                    "title": "и CI/CD",
+                    "titleAccent": "Окружение",
+                    "icon": "lucide:git-fork",
+                    "previewIcons": [
+                        "simple-icons:nixos",
+                        "simple-icons:docker",
+                        "simple-icons:github",
+                        "simple-icons:nginx"
+                    ],
+                    "description": "Я использую современные инструменты, чтобы упростить разработку и развертывание, обеспечивая стабильную инфраструктуру и удобные процессы работы.",
+                    "skills": [
+                        { "name": "NixOS", "icon": "simple-icons:nixos" },
+                        { "name": "Docker", "icon": "simple-icons:docker" },
+                        { "name": "GitHub", "icon": "simple-icons:github" },
+                        { "name": "Nginx", "icon": "simple-icons:nginx" },
+                        { "name": "Caddy", "icon": "simple-icons:caddy" }
+                    ]
+                }
+            ]
+        }'::jsonb)
+        ON CONFLICT (locale_code, namespace) 
+        DO UPDATE SET payload = EXCLUDED.payload;
+        "#
+    )
+    .execute(pool)
+    .await?;
+
+    sqlx::query(
+        r#"
+        INSERT INTO translations (locale_code, namespace, payload)
+        VALUES 
         ('ru', 'footer', '{
             "certified": "F07 certified",
             "certifiedSub": "(сертифицировано диагнозом F07)."

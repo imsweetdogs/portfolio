@@ -96,6 +96,28 @@ export interface ProjectsTranslations {
   modal: ProjectsModalLabels
 }
 
+export interface SkillItem {
+  name: string
+  icon: string
+}
+
+export interface SkillGroup {
+  id: string
+  title: string
+  titleAccent?: string
+  icon: string
+  previewIcons?: string[]
+  description: string
+  skills: SkillItem[]
+}
+
+export interface SkillsTranslations {
+  title: string
+  titleAccent: string
+  description: string
+  groups: SkillGroup[]
+}
+
 export interface TranslationPayload {
   data?: ProfileData
   links?: LinksData
@@ -103,6 +125,7 @@ export interface TranslationPayload {
   media?: MediaData
   hero?: HeroData
   projects?: ProjectsTranslations
+  skills?: SkillsTranslations
   footer?: FooterData
   [key: string]: any
 }

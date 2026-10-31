@@ -8,6 +8,7 @@ import CanvasSection from '~/components/common/CanvasSection.vue'
 
 import HeroSection from '~/components/sections/hero/HeroSection.vue'
 import ProjectsSection from '~/components/sections/projects/ProjectsSection.vue'
+import SkillsSection from '~/components/sections/skills/SkillsSection.vue'
 
 import { useI18n } from '~/composables/useI18n'
 import { useTexture } from '~/composables/useTexture'
@@ -93,10 +94,16 @@ const handleOpenTicket = () => {
         />
       </CanvasSection>
 
-      <!-- 2. ПРОЕКТЫ -->
+      <!-- 2. ПРОЕКТЫ (внутри сам рулит канвасом с точками) -->
       <ProjectsSection
         v-if="translations.projects"
         :i18n="translations.projects"
+      />
+
+      <!-- 3. НАВЫКИ (внутри сам рулит канвасом с сеткой) -->
+      <SkillsSection
+        v-if="translations.skills"
+        :i18n="translations.skills"
       />
     </main>
 

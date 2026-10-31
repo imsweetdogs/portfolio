@@ -1,6 +1,6 @@
 <!-- frontend/components/sections/projects/ProjectsSection.vue -->
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import CanvasSection from '../../common/CanvasSection.vue'
 import ProjectCard from './modules/ProjectCard.vue'
 import ProjectModal from './modules/ProjectModal.vue'
@@ -30,7 +30,7 @@ onMounted(async () => {
   }
 })
 
-// Умный драг-скролл: порог 6px отсекает ложные клики по карточкам
+// --- БРОНЕБОЙНЫЙ ДРАГ-СКРОЛЛ (работает даже при динамическом v-if) ---
 const useDragScroll = (onNearEnd?: () => void) => {
   const el = ref<HTMLElement | null>(null)
   let isDown = false
@@ -67,19 +67,27 @@ const useDragScroll = (onNearEnd?: () => void) => {
     }
   }
 
+  // Вешаем слушатели динамически через watch: как только нода появилась после v-if — биндим события!
+  watch(el, (newEl, oldEl) => {
+    if (oldEl) {
+      oldEl.removeEventListener('mousedown', onMouseDown)
+      oldEl.removeEventListener('mousemove', onMouseMove)
+    }
+    if (newEl) {
+      newEl.addEventListener('mousedown', onMouseDown)
+      newEl.addEventListener('mousemove', onMouseMove)
+    }
+  })
+
   onMounted(() => {
-    const target = el.value
-    if (!target) return
-    target.addEventListener('mousedown', onMouseDown)
-    target.addEventListener('mousemove', onMouseMove)
     window.addEventListener('mouseup', onMouseUp)
   })
 
   onUnmounted(() => {
-    const target = el.value
-    if (!target) return
-    target.removeEventListener('mousedown', onMouseDown)
-    target.removeEventListener('mousemove', onMouseMove)
+    if (el.value) {
+      el.value.removeEventListener('mousedown', onMouseDown)
+      el.value.removeEventListener('mousemove', onMouseMove)
+    }
     window.removeEventListener('mouseup', onMouseUp)
   })
 
@@ -131,7 +139,7 @@ const openProjectModal = (item: ProjectItem) => {
 </script>
 
 <template>
-  <div id="projects" class="w-full">
+  <div id="projects" data-no-burst class="w-full">
     
     <!-- 1. Заголовок и фильтры тегов -->
     <CanvasSection pattern="none" class="pt-20 pb-2">
@@ -174,43 +182,58 @@ const openProjectModal = (item: ProjectItem) => {
 
     <!-- 2. Слайдер карточек на точках -->
     <CanvasSection pattern="dots" :fade-top="true" :fade-bottom="true" class="pt-4 pb-28">
-      <div data-no-burst class="max-w-7xl mx-auto px-6 sm:px-12 lg:px-20">
+      <div class="max-w-7xl mx-auto px-6 sm:px-12 lg:px-20">
         
-        <!-- Скелетон загрузки -->
-        <div v-if="isLoading" class="flex gap-6 overflow-hidden py-4">
-          <div 
-            v-for="i in 3" 
-            :key="i" 
-            class="w-[290px] sm:w-[330px] h-[460px] flex-shrink-0 rounded-3xl border border-zinc-800/60 bg-zinc-900/20 animate-pulse" 
-          />
-        </div>
+        <!-- ВНЕШНИЙ КОНТЕЙНЕР: Порталы живут ВСЕГДА и не респавнятся -->
+        <div class="relative w-full">
+          
+          <!-- Левый портал: всегда на месте -->
+          <div class="pointer-events-none absolute -left-1 sm:-left-3 top-1/2 -translate-y-1/2 h-72 sm:h-88 w-0.5 rounded-full bg-gradient-to-b from-transparent via-indigo-400 to-transparent blur-[0.5px] opacity-80 z-20 animate-pulse" />
+          <div class="pointer-events-none absolute -left-6 top-1/2 -translate-y-1/2 h-60 w-16 rounded-full bg-indigo-600/20 blur-2xl z-10" />
 
-        <!-- Заглушка, если пусто -->
-        <div 
-          v-else-if="projects.length === 0" 
-          class="my-8 py-20 flex flex-col items-center justify-center text-center rounded-3xl border border-dashed border-zinc-800/80 bg-zinc-950/30 backdrop-blur-sm"
-        >
-          <div class="h-12 w-12 rounded-2xl border border-zinc-800 bg-zinc-900/60 flex items-center justify-center mb-4 text-zinc-500 shadow-inner">
-            <Icon name="lucide:folder-git-2" class="w-6 h-6" />
+          <!-- Правый портал: всегда на месте -->
+          <div class="pointer-events-none absolute -right-1 sm:-right-3 top-1/2 -translate-y-1/2 h-72 sm:h-88 w-0.5 rounded-full bg-gradient-to-b from-transparent via-cyan-400 to-transparent blur-[0.5px] opacity-80 z-20 animate-pulse" />
+          <div class="pointer-events-none absolute -right-6 top-1/2 -translate-y-1/2 h-60 w-16 rounded-full bg-cyan-500/20 blur-2xl z-10" />
+
+          <!-- Скелетон загрузки -->
+          <div v-if="isLoading" class="flex gap-6 overflow-hidden py-4">
+            <div 
+              v-for="i in 3" 
+              :key="i" 
+              class="w-[290px] sm:w-[330px] h-[460px] flex-shrink-0 rounded-3xl border border-zinc-800/60 bg-zinc-900/20 animate-pulse" 
+            />
           </div>
-          <p class="font-mono text-sm text-zinc-400 max-w-sm">
-            {{ i18n.empty || 'В этой категории пока нет проектов.' }}
-          </p>
-        </div>
 
-        <!-- Карточки -->
-        <div
-          v-else
-          ref="cardsSliderRef"
-          class="flex items-stretch gap-6 overflow-x-auto py-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing"
-        >
-          <ProjectCard
-            v-for="item in projects"
-            :key="item.id"
-            :project="item"
-            :details-label="i18n.details"
-            @select="openProjectModal"
-          />
+          <!-- Заглушка, если пусто -->
+          <div 
+            v-else-if="projects.length === 0" 
+            class="my-8 py-20 flex flex-col items-center justify-center text-center rounded-3xl border border-dashed border-zinc-800/80 bg-zinc-950/30 backdrop-blur-sm"
+          >
+            <div class="h-12 w-12 rounded-2xl border border-zinc-800 bg-zinc-900/60 flex items-center justify-center mb-4 text-zinc-500 shadow-inner">
+              <Icon name="lucide:folder-git-2" class="w-6 h-6" />
+            </div>
+            <p class="font-mono text-sm text-zinc-400 max-w-sm">
+              {{ i18n.empty || 'В этой категории пока нет проектов.' }}
+            </p>
+          </div>
+
+          <!-- Слайдер карточек с вылетом слева направо -->
+          <div
+            v-else
+            ref="cardsSliderRef"
+            class="flex items-stretch gap-6 overflow-x-auto py-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing [mask-image:linear-gradient(to_right,transparent,black_28px,black_calc(100%-28px),transparent)] sm:[mask-image:linear-gradient(to_right,transparent,black_56px,black_calc(100%-56px),transparent)]"
+          >
+            <ProjectCard
+              v-for="(item, idx) in projects"
+              :key="item.id"
+              :project="item"
+              :details-label="i18n.details"
+              class="animate-card-slide-in"
+              :style="{ animationDelay: `${idx * 50}ms` }"
+              @select="openProjectModal"
+            />
+          </div>
+
         </div>
 
         <!-- Нижняя панель управления -->
@@ -257,3 +280,21 @@ const openProjectModal = (item: ProjectItem) => {
 
   </div>
 </template>
+
+<style scoped>
+/* Анимация каскадного вылета карточек слева направо */
+@keyframes cardSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-35px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.animate-card-slide-in {
+  animation: cardSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+</style>
