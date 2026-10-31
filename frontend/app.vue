@@ -7,9 +7,11 @@ import CursorParticles from '~/components/common/effects/CursorParticles.vue'
 import CanvasSection from '~/components/common/CanvasSection.vue'
 
 import HeroSection from '~/components/sections/hero/HeroSection.vue'
+import ProjectsSection from '~/components/sections/projects/ProjectsSection.vue'
 
 import { useI18n } from '~/composables/useI18n'
 import { useTexture } from '~/composables/useTexture'
+import { useProjects } from '~/composables/useProjects'
 
 const { isTextureEnabled, toggleTexture } = useTexture()
 const { 
@@ -20,8 +22,14 @@ const {
   nextLocale 
 } = useI18n()
 
+const { fetchProjects } = useProjects()
+
+// Серверный рендеринг: переводы + проекты
 await useAsyncData('init-app', async () => {
-  await initI18n()
+  await Promise.all([
+    initI18n(),
+    fetchProjects(false)
+  ])
   return true
 })
 
@@ -41,7 +49,7 @@ const handleOpenTicket = () => {
 </script>
 
 <template>
-  <div class="select-none relative min-h-screen bg-[#080809] text-zinc-100 font-mono antialiased selection:bg-indigo-500/20 selection:text-indigo-300 overflow-x-hidden flex flex-col justify-between">
+  <div class="relative min-h-screen bg-[#080809] text-zinc-100 font-mono antialiased selection:bg-indigo-500/20 selection:text-indigo-300 overflow-x-hidden flex flex-col justify-between">
     
     <!-- Эффекты мыши -->
     <CursorParticles />
@@ -71,6 +79,11 @@ const handleOpenTicket = () => {
     <main class="relative z-10 flex-grow">
       <!-- 1. HERO -->
       <CanvasSection pattern="grid" :fade-bottom="true" class="z-20">
+        <div class="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 w-full max-w-6xl h-[560px] overflow-hidden opacity-40 z-0">
+          <div class="absolute top-10 left-1/4 h-96 w-96 rounded-full bg-indigo-600/10 blur-[150px]" />
+          <div class="absolute top-20 right-1/4 h-80 w-80 rounded-full bg-sky-500/10 blur-[140px]" />
+        </div>
+
         <HeroSection
           v-if="translations.hero"
           :i18n="translations.hero"
@@ -79,9 +92,15 @@ const handleOpenTicket = () => {
           @open-ticket="handleOpenTicket"
         />
       </CanvasSection>
+
+      <!-- 2. ПРОЕКТЫ -->
+      <ProjectsSection
+        v-if="translations.projects"
+        :i18n="translations.projects"
+      />
     </main>
 
-    <!-- 2. ФУТЕР -->
+    <!-- 3. ФУТЕР -->
     <CanvasSection pattern="none" class="z-20">
       <Footer 
         :links="translations.links" 

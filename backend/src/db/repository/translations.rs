@@ -94,14 +94,33 @@ pub async fn resolve_fallback_chain(pool: &PgPool, target_lang: &str) -> Result<
     Ok(chain)
 }
 
+const LANDING_NAMESPACES: &[&str] = &[
+    "data",
+    "links",
+    "media",
+    "header",
+    "hero",
+    "projects",
+    "skills",
+    "about",
+    "footer",
+];
+
 // Забирает ВСЕ секции со слоеным мерджем
 pub async fn find_all_by_lang(pool: &PgPool, lang: &str) -> Result<Value, sqlx::Error> {
     let chain = resolve_fallback_chain(pool, lang).await?;
 
+    // База отдает СТРОГО только секции из белого списка:
     let rows = sqlx::query_as::<_, SectionRow>(
-        "SELECT locale_code, namespace, payload FROM translations WHERE locale_code = ANY($1)"
+        r#"
+        SELECT locale_code, namespace, payload 
+        FROM translations 
+        WHERE locale_code = ANY($1) 
+          AND namespace = ANY($2)
+        "#
     )
     .bind(&chain)
+    .bind(LANDING_NAMESPACES)
     .fetch_all(pool)
     .await?;
 
