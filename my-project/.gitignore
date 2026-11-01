@@ -1,0 +1,38 @@
+# Rust build artifacts
+/target/
+
+# Sensitive envs (ключи от Neon, токены)
+.env
+.env.*
+!.env.example
+
+# Debug core dumps & logs
+core
+*.log
+*.bk
+
+proxychains.conf
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Nuxt / Nitro build outputs
+.nuxt/
+.output/
+dist/
+.nitro/
+.cache/
+.data/
+.server/
+
+# Sensitive envs
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*

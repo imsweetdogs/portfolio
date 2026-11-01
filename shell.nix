@@ -1,35 +1,27 @@
 { pkgs ? import <nixpkgs> {} }:
 
 pkgs.mkShell {
-  nativeBuildInputs = with pkgs; [
-    pkg-config
-  ];
-
   buildInputs = with pkgs; [
-    proxychains-ng
-
-    # --- Backend (Rust) ---
+    # 1. Rust инструменты
     rustc
     cargo
-    rustfmt
-    clippy
     rust-analyzer
+    clippy
+
+    # 2. Системные библиотеки (критично для сборки sqlx и сетевых библиотек Rust)
+    pkg-config
     openssl
 
-    # --- Frontend (Node / Nuxt) ---
+    # 3. Фронтенд (Node.js 22 и пакетные менеджеры)
     bun
+    nodejs_22
 
-    # --- Deploy & Utils ---
-    # nodePackages.wrangler
+    proxychains
   ];
 
-  # Фикс для OpenSSL в Rust под NixOS
-  PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
-  RUST_BACKTRACE = "1";
-
+  # Прокидываем пути для сборщика Rust, чтобы cargo видел OpenSSL в NixOS
   shellHook = ''
-    echo "Dev Environment Ready!"
-    echo "• Rust: $(rustc --version)"
-    echo "• Bun: $(bun --version)"
+    export PKG_CONFIG_PATH="${pkgs.openssl.dev}/lib/pkgconfig"
+    echo "🦀 Nix dev-environment ready! (Rust + Node.js + Vercel CLI)"
   '';
 }
