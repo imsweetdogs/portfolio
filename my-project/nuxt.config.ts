@@ -1,4 +1,7 @@
 export default defineNuxtConfig({
+  // Выключаем серверный рендеринг Nuxt, чтобы избежать бесконечной рекурсии в serverless:
+  ssr: false,
+
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
 
